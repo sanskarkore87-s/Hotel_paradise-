@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotel Paradise | Authentic Taste of India</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head><!-- PREMIUM CHECKOUT MODAL -->
+<div id="checkoutModal" class="checkout-modal">
+  <div class="checkout-box">
+    <h2>Confirm Your Order</h2>
+
+    <input type="text" id="customerName" placeholder="Your Name" />
+    <input type="tel" id="customerPhone" placeholder="Your Phone Number" />
+
+    <button id="confirmOrderBtn">Proceed to WhatsApp</button>
+  </div>
+</div>
+<body>
+
+  <div id="loader">
+    <div class="loader-content">
+      <h1 class="loader-logo">Hotel Paradise</h1>
+      <p class="loader-tagline">The Authentic Taste of India</p>
+      <div class="loader-line"></div>
+    </div>
+  </div>
+
+  <button id="cartButton" class="cart-button">
+    🛒 <span id="cartCount" class="cart-count">0</span>
+  </button>
+
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <button id="closeCartBtn" class="close-cart">✕</button>
+    </div>
+
+    <div id="cartItems" class="cart-items">
+      <p class="empty-cart">Your cart is empty.</p>
+    </div>
+
+    <div id="upsellBox" class="upsell-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3 style="margin: 0; font-size: 1rem;">🍽️ Customers Also Added</h3>
+        <button id="closeUpsellBtn" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #999; padding: 0 5px;">✕</button>
+      </div>
+      <div class="upsell-items">
+        <button class="upsell-item" data-name="Garlic Naan" data-price="49">
+          <span>Garlic Naan</span><strong>₹49</strong>
+        </button>
+        <button class="upsell-item" data-name="Cold Drink" data-price="40">
+          <span>Cold Drink</span><strong>₹40</strong>
+        </button>
+        <button class="upsell-item" data-name="Gulab Jamun" data-price="79">
+          <span>Gulab Jamun</span><strong>₹79</strong>
+        </button>
+      </div>
+    </div>
+
+    <div class="cart-footer">
+      <div class="order-type-section">
+          <h4 style="margin-bottom: 12px; color: #1A1A1A; font-family: 'Inter', sans-serif; font-size: 14px;">Select Order Type</h4>
+          <div class="order-options" style="display: flex; gap: 8px;">
+              <label class="order-radio" style="flex: 1;">
+                  <input type="radio" name="orderType" value="Dine-In" checked style="display: none;">
+                  <span>Dine-In</span>
+              </label>
+              <label class="order-radio" style="flex: 1;">
+                  <input type="radio" name="orderType" value="Takeaway" style="display: none;">
+                  <span>Takeaway</span>
+              </label>
+              <label class="order-radio" style="flex: 1;">
+                  <input type="radio" name="orderType" value="Home Delivery" style="display: none;">
+                  <span>Delivery</span>
+              </label>
+          </div>
+          <div id="addressBox" style="display: none; margin-top: 12px;">
+              <input type="text" id="deliveryAddress" placeholder="Enter Full Delivery Address..." class="premium-input">
+          </div>
+      </div>
+
+      <div class="cart-total">
+        <span>Total Bill</span>
+        <strong id="cartTotal">₹0</strong>
+      </div>
+      <button id="whatsappOrderBtn" class="btn btn-primary" style="width: 100%;">ORDER ON WHATSAPP</button>
+    </div>
+  </aside>
+
+  <main id="main-content" class="hidden">
+    <header class="header">
+      <div class="logo">Hotel Paradise</div>
+      <a href="tel:+919876543210" class="call-btn">📞</a>
+      <nav class="top-nav">
+        <a href="javascript:void(0)" id="openMenuNav">Menu</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-content">
+        <span class="eyebrow">AUTHENTIC INDIAN CUISINE</span>
+        <h1>Hotel Paradise</h1>
+        <p>The Authentic Taste of India — crafted with royal recipes, heritage spices, and unforgettable flavors.</p>
+        <button id="openMenuBtn" class="btn btn-primary" style="margin-top: 15px;">VIEW FULL MENU</button>
+      </div>
+    </section>
+
+    <section class="featured-section" id="featured">
+      <div class="section-header">
+        <span class="section-eyebrow">SIGNATURE FAVORITES</span>
+        <h2>Best Selling Dishes</h2>
+        <p>Our most loved creations, crafted with authentic Indian spices.</p>
+      </div>
+      <div class="featured-grid">
+        <article class="dish-card">
+          <div class="dish-image" style="background-image:url('https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=1200&q=80');"></div>
+          <div class="dish-content">
+            <span class="dish-tag">Chef's Choice</span>
+            <h3>Butter Chicken</h3>
+            <p>Tender tandoori chicken in a rich, creamy tomato gravy.</p>
+          </div>
+        </article>
+        <article class="dish-card">
+          <div class="dish-image" style="background-image:url('https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=1200&q=80');"></div>
+          <div class="dish-content">
+            <span class="dish-tag">Vegetarian</span>
+            <h3>Paneer Tikka</h3>
+            <p>Char-grilled cottage cheese marinated in aromatic spices.</p>
+          </div>
+        </article>
+        <article class="dish-card">
+          <div class="dish-image" style="background-image:url('https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=1200&q=80');"></div>
+          <div class="dish-content">
+            <span class="dish-tag">Royal Favorite</span>
+            <h3>Royal Biryani</h3>
+            <p>Fragrant basmati rice layered with saffron and herbs.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="reviews-section">
+      <div class="section-header">
+        <span class="section-eyebrow">CUSTOMER LOVE</span>
+        <h2>4.9 ★ Rated by Food Lovers</h2>
+      </div>
+      <div class="reviews-grid">
+        <article class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">“Best butter chicken in town. Rich flavor, perfect spices, and excellent service.”</p>
+          <h4 class="review-author">Rahul Sharma</h4>
+        </article>
+        <article class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">“The biryani was absolutely amazing. Premium quality and authentic taste.”</p>
+          <h4 class="review-author">Priya Mehta</h4>
+        </article>
+        <article class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">“Beautiful ambiance, fast delivery, and one of the best dining experiences in the city.”</p>
+          <h4 class="review-author">Amit Verma</h4>
+        </article>
+      </div>
+    </section>
+
+    <section id="about" class="about-section">
+      <div class="about-container">
+        <div class="about-image"></div>
+        <div class="about-content">
+          <span class="section-eyebrow">OUR STORY</span>
+          <h2>Crafting Authentic Indian Flavors Since 1998</h2>
+          <p>Hotel Paradise is a celebration of India's rich culinary heritage. Our chefs blend traditional recipes, handpicked spices, and generations of expertise to create unforgettable dining experiences.</p>
+          <div class="about-stats">
+            <div class="stat-box"><h3>25+</h3><span>Years Legacy</span></div>
+            <div class="stat-box"><h3>4.9★</h3><span>Customer Rating</span></div>
+            <div class="stat-box"><h3>11 AM – 11 PM</h3><span>Open Daily</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+      <div class="section-header">
+        <span class="section-eyebrow">VISIT US</span>
+        <h2>Contact & Location</h2>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <h3>Hotel Paradise</h3>
+          <p><strong>📍 Address:</strong><br>Main Road, Pune, Maharashtra</p>
+          <p><strong>📞 Phone:</strong><br>+91 93725 49949</p>
+          <p><strong>🕒 Hours:</strong><br>11:00 AM – 11:30 PM</p>
+        </div>
+        <div class="map-card" id="location">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d121059.04360434421!2d73.7805654!3d18.5246164!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf2e67461101%3A0x828d43bf9d9ee343!2sPune%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" loading="lazy" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <aside class="menu-drawer" id="menuDrawer">
+      <div class="menu-header">
+        <h2>Full Menu</h2>
+        <button class="close-menu" id="closeMenuBtn">✕</button>
+      </div>
+      <div class="menu-items">
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=80" alt="Butter Chicken" />
+          <div class="menu-item-info">
+            <h3>Butter Chicken</h3>
+            <span class="price">₹349</span>
+          </div>
+          <div class="quantity-control" data-name="Butter Chicken" data-price="349">
+            <button class="qty-btn minus">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn plus">+</button>
+          </div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80" alt="Paneer Tikka" />
+          <div class="menu-item-info">
+            <h3>Paneer Tikka</h3>
+            <span class="price">₹299</span>
+          </div>
+          <div class="quantity-control" data-name="Paneer Tikka" data-price="299">
+            <button class="qty-btn minus">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn plus">+</button>
+          </div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80" alt="Royal Biryani" />
+          <div class="menu-item-info">
+            <h3>Royal Biryani</h3>
+            <span class="price">₹399</span>
+          </div>
+          <div class="quantity-control" data-name="Royal Biryani" data-price="399">
+            <button class="qty-btn minus">−</button>
+            <span class="qty-value">0</span>
+            <button class="qty-btn plus">+</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
