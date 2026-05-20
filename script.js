@@ -9,19 +9,7 @@ window.addEventListener('load', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  // ================= ORDER ID =================
-  function generateOrderId() {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let id = "HP-";
-    for (let i = 0; i < 6; i++) {
-      id += chars[Math.floor(Math.random() * chars.length)];
-    }
-    return id;
-  }
-
-  let currentOrderId = generateOrderId();
-
-  // ================= MENU =================
+  // Menu Toggle
   const menuDrawer = document.getElementById('menuDrawer');
   const menuOverlay = document.getElementById('menuOverlay');
 
@@ -36,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('closeMenuBtn').addEventListener('click', () => toggleMenu(false));
   menuOverlay.addEventListener('click', () => toggleMenu(false));
 
-  // ================= CART =================
+  // Cart Toggle
   const cartDrawer = document.getElementById('cartDrawer');
   const cartOverlay = document.getElementById('cartOverlay');
 
@@ -50,11 +38,12 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('closeCartBtn').addEventListener('click', () => toggleCart(false));
   cartOverlay.addEventListener('click', () => toggleCart(false));
 
+  // Upsell Close
   document.getElementById('closeUpsellBtn').addEventListener('click', () => {
     document.getElementById('upsellBox').style.display = 'none';
   });
 
-  // ================= CART LOGIC =================
+  // ================= CART LOGIC ================= 
   let cart = {};
   const cartCount = document.getElementById('cartCount');
   const cartItems = document.getElementById('cartItems');
@@ -72,26 +61,24 @@ document.addEventListener('DOMContentLoaded', function () {
     cartItems.innerHTML = '';
 
     const keys = Object.keys(cart);
-
     if (keys.length === 0) {
       cartItems.innerHTML = '<p class="empty-cart">Your cart is empty.</p>';
     } else {
       keys.forEach(name => {
         const item = cart[name];
         const subtotal = item.price * item.quantity;
-
         totalItems += item.quantity;
         totalAmountGlobal += subtotal;
 
         cartItems.innerHTML += `
           <div class="cart-item-row">
-            <div>
+            <div style="flex: 1;">
               <strong>${name}</strong><br>
               <strong style="color: var(--saffron);">₹${subtotal}</strong>
             </div>
             <div class="cart-qty-control">
               <button class="cart-qty-btn cart-minus" data-name="${name}">−</button>
-              <span>${item.quantity}</span>
+              <span style="font-weight: bold; width: 16px; text-align: center;">${item.quantity}</span>
               <button class="cart-qty-btn cart-plus" data-name="${name}">+</button>
             </div>
           </div>
@@ -103,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
     cartTotal.textContent = `₹${totalAmountGlobal}`;
 
     document.querySelectorAll('.cart-plus').forEach(btn => {
-      btn.addEventListener('click', function () {
+      btn.addEventListener('click', function() {
         const name = this.dataset.name;
         cart[name].quantity++;
         syncMenuUI(name, cart[name].quantity);
@@ -112,125 +99,97 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelectorAll('.cart-minus').forEach(btn => {
-      btn.addEventListener('click', function () {
+      btn.addEventListener('click', function() {
         const name = this.dataset.name;
         if (cart[name].quantity > 1) {
           cart[name].quantity--;
+          syncMenuUI(name, cart[name].quantity);
         } else {
           delete cart[name];
-          syncMenuUI(name, 0);
+          syncMenuUI(name, 0); 
         }
         updateCartUI();
       });
     });
   }
 
-  // ================= MENU BUTTONS =================
+  // Menu +/- Buttons
   document.querySelectorAll('.quantity-control').forEach(control => {
     const name = control.dataset.name;
-    const price = parseInt(control.dataset.price);
+    const price = parseInt(control.dataset.price, 10);
     const qtyValue = control.querySelector('.qty-value');
 
     control.querySelector('.plus').addEventListener('click', () => {
-      cart[name] = cart[name]
-        ? { price, quantity: cart[name].quantity + 1 }
-        : { price, quantity: 1 };
-
+      cart[name] = cart[name] ? { price, quantity: cart[name].quantity + 1 } : { price, quantity: 1 };
       qtyValue.textContent = cart[name].quantity;
       updateCartUI();
     });
 
     control.querySelector('.minus').addEventListener('click', () => {
-      if (cart[name]) {
+      if (cart[name] && cart[name].quantity > 0) {
         cart[name].quantity--;
-        if (cart[name].quantity <= 0) {
-          delete cart[name];
-          qtyValue.textContent = 0;
-        } else {
-          qtyValue.textContent = cart[name].quantity;
-        }
+        qtyValue.textContent = cart[name].quantity;
+        if (cart[name].quantity === 0) delete cart[name];
         updateCartUI();
       }
     });
   });
 
-  // ================= UPSELL =================
+  // Upsell Click
   document.querySelectorAll('.upsell-item').forEach(btn => {
     btn.addEventListener('click', function () {
       const name = this.dataset.name;
-      const price = parseInt(this.dataset.price);
-
-      cart[name] = cart[name]
-        ? { price, quantity: cart[name].quantity + 1 }
-        : { price, quantity: 1 };
-
+      const price = parseInt(this.dataset.price, 10);
+      cart[name] = cart[name] ? { price, quantity: cart[name].quantity + 1 } : { price, quantity: 1 };
       updateCartUI();
+      
+      this.style.background = 'rgba(230, 126, 34, 0.15)';
+      setTimeout(() => this.style.background = '', 300);
     });
   });
 
-  // ================= ORDER TYPE =================
+  // Order Type Logic
   const orderRadios = document.querySelectorAll('input[name="orderType"]');
   const addressBox = document.getElementById('addressBox');
 
   orderRadios.forEach(radio => {
     radio.addEventListener('change', (e) => {
-      addressBox.style.display = e.target.value === 'Home Delivery' ? 'block' : 'none';
+      if(e.target.value === 'Home Delivery') {
+        addressBox.style.display = 'block';
+      } else {
+        addressBox.style.display = 'none';
+      }
     });
   });
 
-  // ================= CHECKOUT MODAL =================
-  const modal = document.getElementById('checkoutModal');
-
+  // WhatsApp Sender
   document.getElementById('whatsappOrderBtn').addEventListener('click', function () {
     if (Object.keys(cart).length === 0) {
-      alert("Cart is empty!");
-      return;
-    }
-    modal.classList.add('active');
-  });
-
-  // ================= FINAL WHATSAPP =================
-  document.getElementById('confirmOrderBtn').addEventListener('click', function () {
-
-    const name = document.getElementById('customerName').value.trim();
-    const phone = document.getElementById('customerPhone').value.trim();
-
-    if (!name || !phone) {
-      alert("Enter Name & Phone");
+      alert("Sir, your cart is empty! Please add some dishes.");
       return;
     }
 
-    const orderType = document.querySelector('input[name="orderType"]:checked').value;
+    const selectedOrderType = document.querySelector('input[name="orderType"]:checked').value;
     const address = document.getElementById('deliveryAddress').value.trim();
 
     let message = `🍽️ *Hotel Paradise Order*\n\n`;
-    message += `🆔 Order ID: ${currentOrderId}\n`;
-    message += `👤 Name: ${name}\n`;
-    message += `📱 Phone: ${phone}\n`;
-    message += `📦 Type: ${orderType}\n`;
+    message += `📦 *Order Type:* ${selectedOrderType}\n`;
 
-    if (orderType === 'Home Delivery') {
-      if (!address) {
-        alert("Enter address");
-        return;
-      }
-      message += `📍 Address: ${address}\n`;
+    if (selectedOrderType === 'Home Delivery') {
+      if (address === '') { alert("Please enter your Delivery Address!"); return; }
+      message += `📍 *Address:* ${address}\n`;
     }
 
     message += `\n*Items:*\n`;
-
-    Object.keys(cart).forEach(nameItem => {
-      const item = cart[nameItem];
-      message += `• ${nameItem} x${item.quantity} = ₹${item.price * item.quantity}\n`;
+    Object.keys(cart).forEach(name => {
+      const item = cart[name];
+      message += `• ${name} x${item.quantity} = ₹${item.price * item.quantity}\n`;
     });
 
-    message += `\n💰 Total: ₹${totalAmountGlobal}`;
+    message += `\n💰 *Total Bill: ₹${totalAmountGlobal}*`;
 
-    const number = "919372549949";
-
-    window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`, '_blank');
-
-    modal.classList.remove('active');
+    const WHATSAPP_NUMBER = '919876543210'; 
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
   });
 
 });
